@@ -1,8 +1,8 @@
-function [v_px,v_py,pose,linear_position,U_sl,H_obs,L_obs,dl, opt_stat, csi, error] = MPC_Controller(x_p, y_p, Ts, N, v_max, q, r, s, a_max, d, Rw, omega_m,...
+function [v_px,v_py,pose,linear_position,U_sl,H_obs,L_obs,dl, opt_stat, csi, error, runtime] = MPC_Controller(x_p, y_p, Ts, N, v_max, q, r, s, a_max, d, Rw, omega_m,...
     omega_M, Usl_prev, csi_prev, curr_pose, curr_ped_pos, v_ped, sp, x_pr, y_pr, epsilon, n_obs, sa, r_c, r_red, T_gp, replanTrigger, param, e, N_samples)
 %#codegen
 
-sim_time = get_param('wheelchair_navigation','SimulationTime');
+sim_time = get_param('simulatore','SimulationTime');
 count = round(sim_time/Ts) + 1;
 
 persistent model;
@@ -421,4 +421,7 @@ end
 %Compute error on first prediction step to discriminate on replanning
 pred = A_h*csi+B_h*U;
 error = norm(Csi_r(1:2)-pred(1:2));
+
+%Extract gurobi runtime
+runtime = results.runtime;
 end
